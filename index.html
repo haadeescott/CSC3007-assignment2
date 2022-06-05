@@ -26,7 +26,7 @@
         <button id="btn2019" >2019</button>
         <button id="btn2020" >2020</button>
     </div>
-
+    <div id="my_label"><h1 id="lbl_info"></h1></div>
     <div id="my_data"></div>
     <script>
         getData();
@@ -93,19 +93,20 @@
                 }
             }
 
-            // set the dimensions and margins of the graph
             var margin = {top: 30, right: 30, bottom: 70, left: 60},
                 width = 1200 - margin.left - margin.right,
                 height = 600 - margin.top - margin.bottom;
-
             // append the svg object to the body of the page
             var svg = d3.select("#my_data")
             .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
+        
             .append("g")
                 .attr("transform",
-                    "translate(" + margin.left + "," + margin.top + ")");
+                    "translate(" + margin.left + "," + margin.top + ")")
+            
+            
 
             // Initialize the X axis
             var x = d3.scaleBand()
@@ -137,13 +138,15 @@
                 yAxis.transition().duration(1000).call(d3.axisLeft(y));
                 
                 // Create the u variable
-                var u = svg.selectAll("rect")
+                var updateChart = svg.selectAll("rect")
                     .data(data)
-                u
-                    .enter()
+                
+                updateChart.enter()
                     .append("rect") // Add a new rect for each new elements
-                    .merge(u) // get the already existing elements as well
-                    .transition() // and apply changes to all of them
+                    .merge(updateChart) // get the already existing elements as well
+            
+
+                updateChart.transition() // and apply changes to all of them
                     .duration(1000)
                     .attr("fill", function(d){ return d.y > 6 ? "#FF0033" : "#666666"})
                     .attr("x", function(d) { return x(d.level_2); })
@@ -151,10 +154,24 @@
                     .attr("width", x.bandwidth())
                     .attr("height", function(d) { return height - y(d.value); })
                     
-                    
+
+                updateChart.on("mouseover", (event, d) => {
+                    d3.select(event.currentTarget)
+                    .transition()
+                    .duration(100)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 5)
+                     })
+
+                updateChart.on("mouseout", (event, d) => {
+                    d3.select(event.currentTarget)
+                    .transition()
+                    .duration(100)
+                    .attr("stroke", "none");
+                })
+                
                 // If less group in the new dataset, I delete the ones not in use anymore
-                u
-                    .exit()
+                updateChart.exit()
                     .remove()
                 }
                 // Initialize the plot with the first dataset
@@ -170,7 +187,6 @@
                 document.getElementById("btn2018").onclick = function() {update(year_2018)};
                 document.getElementById("btn2019").onclick = function() {update(year_2019)};
                 document.getElementById("btn2020").onclick = function() {update(year_2020)};
-                
 
         }
     </script>
