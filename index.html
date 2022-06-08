@@ -17,6 +17,7 @@
       <div class="card text-center">
         <div class="card-header">
           <h3>Common Crimes in SG over the years</h3>
+          <p>Select a year date first!</p>
           <p>Click on any button below to view the data. Hover over any bars to view the values for each categorised crime.</p>
         </div>
         <div class="card-body">
@@ -126,19 +127,35 @@
                     "translate(" + margin.left + "," + margin.top + ")")
             
             
+            
+            
 
             // Initialize the X axis
             var x = d3.scaleBand()
             .range([ 0, width ])
-            .padding(0.2);
+            .padding(0.2)
             var xAxis = svg.append("g")
             .attr("transform", "translate(0," + height + ")")
-
+            svg.append("text")
+            .attr("x", width/2 )
+            .attr("y", height +35)
+            .style("text-anchor", "middle")
+                .text("Crime Category")
+            
             // Initialize the Y axis
             var y = d3.scaleLinear()
             .range([ height, 0]);
             var yAxis = svg.append("g")
             .attr("class", "myYaxis")
+            
+
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Number of crimes committed")
 
             function update(data){
                 currMax = [];
@@ -222,9 +239,11 @@
                 
                 updateText.exit()
                 .remove()
+
+                
                 }
                 // Initialize the plot with the first dataset
-                update(year_2011)
+                
 
                 document.getElementById("btn2011").onclick = function() {update(year_2011)};
                 document.getElementById("btn2012").onclick = function() {update(year_2012)};
@@ -236,6 +255,8 @@
                 document.getElementById("btn2018").onclick = function() {update(year_2018)};
                 document.getElementById("btn2019").onclick = function() {update(year_2019)};
                 document.getElementById("btn2020").onclick = function() {update(year_2020)};
+
+                update(year_2011)
 
         }
     </script>
